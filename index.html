@@ -545,6 +545,8 @@ function newCareer(clubId, managerName){
       clubs:{}, players:{}, fixtures:[], table:{}, scorers:{}, cups:null,
       lineup:[], bench:[], form:'4-3-3', tactic:{men:1,press:1,pass:1,width:1}, trainPts:3,
       offers:[], lastResult:null, board:'', leagueClubs:[], leagueName:'' };
+  // 换档时必须清空旧阵容缓存，否则会引用上一档的球员 ID
+  CLUBS.forEach(function(c){ c.squad=[] });
   // 建立全部 100 支球队的真实阵容（转会市场需要）
   CLUBS.forEach(function(c){
     var squad=buildRealSquad(c.id);
