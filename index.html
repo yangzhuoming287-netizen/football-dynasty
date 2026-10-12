@@ -203,6 +203,168 @@ var FORMKEYS=Object.keys(FORMS);
 var WOVR={GK:{GK:0.5,DEF:0.1,PHY:0.2,SPD:0.2},DF:{DEF:0.42,PHY:0.22,SPD:0.2,PAS:0.16},
   MF:{PAS:0.34,DRI:0.22,SPD:0.16,DEF:0.16,PHY:0.12},FW:{SHO:0.4,DRI:0.24,SPD:0.24,PAS:0.12}};
 var STATN={SPD:'速度',SHO:'射门',PAS:'传球',DRI:'盘带',DEF:'防守',PHY:'身体',STAM:'体能',GK:'守门'};
+/* ===================== 真实数据驱动的球员生成 ===================== */
+/* GEN 由 FIFA 18 公开数据集（18147 名球员）统计得出：按位置×能力档位的属性均值/标准差、
+   身高体重、年龄、潜力、惯用脚比例、花式星级分布、国籍分布 */
+var GEN={"GK":{"base":{"n":532,"SPD":[31.5,10.1],"ACC":[31.3,10.4],"FIN":[9.8,4],"PAS":[24.8,6.6],"LP":[23.5,6.7],"CRO":[13.5,3.7],"DRI":[11.9,4],"BAL":[17.2,5.2],"TAC":[13.5,3.4],"SLI":[13.5,3.4],"HEA":[13.7,3.7],"JUM":[51.5,11],"PHY":[55,10.7],"AGG":[23.9,6.6],"STA":[26.6,7.2],"VIS":[31.2,9.5],"POS":[8.8,4.3],"CMP":[36.8,9],"REA":[47.7,7.1],"PEN":[17.1,5.7],"INT":[13.3,5.4],"GKR":[56.6,4.3],"GKD":[56.5,4],"GKH":[54.5,3.9],"GKK":[54.2,4.6],"h":[187.4,5.2],"w":[79.5,6],"age":[21.8,4.5],"pot":[10,5.6],"wage":[1.2,0.6]},"low":{"n":993,"SPD":[39.9,9.9],"ACC":[39.3,10.2],"FIN":[12.6,3.9],"PAS":[27.2,7.6],"LP":[25.5,8],"CRO":[14.4,3.9],"DRI":[14.2,4.2],"BAL":[20.2,5.4],"TAC":[14.4,3.5],"SLI":[14.3,3.6],"HEA":[14.5,3.9],"JUM":[57.6,10.4],"PHY":[61.2,10.6],"AGG":[26.4,7.8],"STA":[31,7.7],"VIS":[36.1,12.3],"POS":[11.8,3.9],"CMP":[45.3,10.9],"REA":[59.3,6.4],"PEN":[20.3,6.3],"INT":[17.8,5.8],"GKR":[66.1,4.1],"GKD":[65.2,3.8],"GKH":[62.8,3.8],"GKK":[61.6,5.3],"h":[188.3,4.7],"w":[82.4,6.2],"age":[26.7,4.9],"pot":[4.3,4.5],"wage":[2.9,2.8]},"mid":{"n":433,"SPD":[43.2,8.7],"ACC":[43.2,9.2],"FIN":[13.3,3.3],"PAS":[29.5,8.4],"LP":[28.1,8.9],"CRO":[14.8,4.4],"DRI":[15.1,3.9],"BAL":[22.1,6],"TAC":[14.3,3.3],"SLI":[14.3,3.3],"HEA":[14.9,4.3],"JUM":[63.6,10.3],"PHY":[65,10],"AGG":[28.8,8.3],"STA":[33.1,7.1],"VIS":[43.8,12.7],"POS":[12.7,3.3],"CMP":[52.4,11.2],"REA":[68.8,4.7],"PEN":[22.4,7.9],"INT":[19.4,5.1],"GKR":[75,3.5],"GKD":[73.8,3.6],"GKH":[70.7,3.8],"GKK":[68.2,5.9],"h":[188.9,4.7],"w":[83.5,5.8],"age":[29.2,4.7],"pot":[2,2.9],"wage":[13.9,12.6]},"high":{"n":67,"SPD":[49.2,7.9],"ACC":[48.3,8.2],"FIN":[12.8,2.6],"PAS":[33.9,9],"LP":[33,9.8],"CRO":[14.6,4.4],"DRI":[15.7,5],"BAL":[24,7.4],"TAC":[14.4,3.1],"SLI":[14,2.8],"HEA":[14.2,3.9],"JUM":[69,8.5],"PHY":[67.9,9],"AGG":[30.5,7.2],"STA":[36.3,5.9],"VIS":[52.4,10.9],"POS":[12.9,3.2],"CMP":[61.3,8.5],"REA":[78.6,4.3],"PEN":[22.7,7],"INT":[20.8,4.4],"GKR":[84.2,3.4],"GKD":[82.8,3.3],"GKH":[80.3,4.1],"GKK":[75.3,6.8],"h":[190.4,4.1],"w":[85.1,5.4],"age":[29,4.1],"pot":[1.7,2.3],"wage":[66.4,54.4]}},"DF":{"base":{"n":792,"SPD":[62.6,9.5],"ACC":[63,9.6],"FIN":[27.7,8.6],"PAS":[45.5,9.6],"LP":[39.1,10.4],"CRO":[41.3,12.2],"DRI":[43.5,12.8],"BAL":[44.8,9.4],"TAC":[57.3,4.9],"SLI":[55.4,5.2],"HEA":[50.2,7.4],"JUM":[65.1,8.6],"PHY":[61.6,10.2],"AGG":[53.7,8],"STA":[60.4,8.1],"VIS":[37.2,8.2],"POS":[37.5,11.3],"CMP":[44.8,6.6],"REA":[50.8,5.2],"PEN":[37.8,7.1],"INT":[52.7,4.5],"GKR":[10.2,3],"GKD":[10.4,2.9],"GKH":[10.1,2.9],"GKK":[10,3],"h":[181.3,6.1],"w":[73.7,6.2],"age":[21.1,3.5],"pot":[10.5,5.3],"wage":[1.4,0.8]},"low":{"n":3299,"SPD":[64.8,12.1],"ACC":[64,12.2],"FIN":[34,11.2],"PAS":[58.1,7.6],"LP":[52.1,10.2],"CRO":[50.4,15],"DRI":[51,12.7],"BAL":[56.5,8.4],"TAC":[65,3.9],"SLI":[63.2,4.4],"HEA":[59.5,8.1],"JUM":[68.5,10.4],"PHY":[70.5,9.9],"AGG":[64,8.8],"STA":[67.8,9.8],"VIS":[44.8,11],"POS":[42.7,13.6],"CMP":[56.7,7.2],"REA":[59.7,5.4],"PEN":[42.3,9.4],"INT":[61.9,5.1],"GKR":[10.5,3.1],"GKD":[10.5,3.1],"GKH":[10.6,3],"GKK":[10.6,3.2],"h":[182.6,6.2],"w":[76.4,6.5],"age":[25.5,4.3],"pot":[4.5,4.7],"wage":[3.3,3.1]},"mid":{"n":1622,"SPD":[66.5,13.5],"ACC":[64.8,14.1],"FIN":[39.8,12.7],"PAS":[66.6,6.6],"LP":[61.8,8.4],"CRO":[56.7,17.2],"DRI":[58.3,13],"BAL":[64.8,8.1],"TAC":[73.3,4],"SLI":[71.8,4.5],"HEA":[68.1,8.3],"JUM":[71.7,10.8],"PHY":[74.6,9.3],"AGG":[73,7.4],"STA":[71.5,10.4],"VIS":[51.8,12.4],"POS":[48.5,15.8],"CMP":[66.7,6],"REA":[69.1,4.8],"PEN":[47.7,11.6],"INT":[71.3,4.7],"GKR":[10.7,3.1],"GKD":[10.7,3.1],"GKH":[10.7,3.1],"GKK":[10.7,3.2],"h":[183.2,6.2],"w":[77.8,6.6],"age":[27.4,3.9],"pot":[2.3,3.1],"wage":[18.1,15.7]},"high":{"n":153,"SPD":[71.7,11.3],"ACC":[67.4,12.6],"FIN":[46.5,12.6],"PAS":[75.1,5.5],"LP":[70.9,7.1],"CRO":[62.5,18.1],"DRI":[66.1,10.3],"BAL":[72.8,7.6],"TAC":[83.3,3.5],"SLI":[81.6,3.6],"HEA":[76.7,7.8],"JUM":[75.3,10.6],"PHY":[78.5,8.1],"AGG":[79.6,6.2],"STA":[75.8,9.3],"VIS":[61.7,12.2],"POS":[52.9,16.8],"CMP":[77.2,4.8],"REA":[79.7,3.6],"PEN":[53.8,12.5],"INT":[81.8,3.5],"GKR":[10.4,3.5],"GKD":[10.8,3.3],"GKH":[10.1,3.3],"GKK":[10.3,3.2],"h":[184.9,6.3],"w":[79.7,7.1],"age":[27.8,3.6],"pot":[1.7,2.3],"wage":[84.2,59.4]}},"MF":{"base":{"n":1026,"SPD":[65.6,7.5],"ACC":[66.1,7.5],"FIN":[42.9,9.1],"PAS":[57.8,6],"LP":[52.9,7],"CRO":[46.6,7.6],"DRI":[55.2,6],"BAL":[56.1,5.2],"TAC":[43.6,11.8],"SLI":[43.2,12],"HEA":[45,7.9],"JUM":[58,9.6],"PHY":[53.1,11.2],"AGG":[49.3,11.4],"STA":[56.3,10.5],"VIS":[51.6,6],"POS":[47.7,8],"CMP":[49.4,7],"REA":[51.5,6.1],"PEN":[46.5,7.8],"INT":[39.4,12.7],"GKR":[10,3],"GKD":[10.1,3],"GKH":[10.3,2.9],"GKK":[10.2,2.9],"h":[177.5,5.5],"w":[70.1,5.6],"age":[20.4,3.2],"pot":[11.5,5.5],"wage":[1.4,0.8]},"low":{"n":3533,"SPD":[68.5,10.2],"ACC":[69.3,10.2],"FIN":[52.8,10.1],"PAS":[65.2,4.9],"LP":[60.4,7],"CRO":[56.7,8.7],"DRI":[63.6,6.3],"BAL":[65.1,4.4],"TAC":[50,15.6],"SLI":[47.4,15.2],"HEA":[51.1,9.7],"JUM":[63.3,11.3],"PHY":[61.6,11.9],"AGG":[57.1,13.8],"STA":[67.8,10.8],"VIS":[60.5,6.7],"POS":[57.2,8.3],"CMP":[59.5,7],"REA":[60.6,5.8],"PEN":[52.9,9.2],"INT":[48.6,16.1],"GKR":[10.6,3.1],"GKD":[10.5,3.1],"GKH":[10.5,3.1],"GKK":[10.6,3.2],"h":[178.1,5.8],"w":[72.2,5.8],"age":[24.8,4.3],"pot":[5.1,5.2],"wage":[3.6,3.5]},"mid":{"n":2060,"SPD":[69.8,11.8],"ACC":[71,11.4],"FIN":[60.9,10.2],"PAS":[73.2,4.5],"LP":[68.9,6.7],"CRO":[65.8,8.6],"DRI":[71.8,6.3],"BAL":[73.5,4.3],"TAC":[56.5,17.6],"SLI":[52.7,17.6],"HEA":[56.5,11],"JUM":[65.5,12],"PHY":[65.4,11.4],"AGG":[64.5,14.3],"STA":[73.7,9.8],"VIS":[70,6.2],"POS":[65.9,7.9],"CMP":[69.8,6],"REA":[70,4.9],"PEN":[60.5,10.1],"INT":[56.8,17.6],"GKR":[10.6,3.1],"GKD":[10.7,3.1],"GKH":[10.8,3.1],"GKK":[10.7,3.1],"h":[178.5,5.9],"w":[73.3,6],"age":[26.7,4],"pot":[2.7,3.5],"wage":[17.8,15.3]},"high":{"n":219,"SPD":[72.4,11],"ACC":[74.4,11.2],"FIN":[70.3,10],"PAS":[82.5,3.8],"LP":[77.4,6.6],"CRO":[74.5,8.2],"DRI":[81.4,6.1],"BAL":[83.5,3.8],"TAC":[61.6,20.2],"SLI":[57.1,20.3],"HEA":[60.8,11.9],"JUM":[66.3,12.5],"PHY":[67.4,11.6],"AGG":[68.4,13.8],"STA":[79,8.6],"VIS":[80,5.5],"POS":[75.7,8],"CMP":[79.8,5.5],"REA":[80.6,4.1],"PEN":[66.8,10.5],"INT":[63.9,19.1],"GKR":[10.6,3.2],"GKD":[10.2,3.4],"GKH":[10.5,3.3],"GKK":[10.3,3.4],"h":[179.4,6],"w":[73.8,6.4],"age":[27,3.5],"pot":[1.9,2.5],"wage":[89.8,68.9]}},"FW":{"base":{"n":547,"SPD":[66.9,9.2],"ACC":[66.8,9.6],"FIN":[56.8,4.8],"PAS":[47.7,6.4],"LP":[36.9,8.6],"CRO":[37.7,9.5],"DRI":[54.1,6.3],"BAL":[53.7,5.4],"TAC":[21,8.4],"SLI":[20.3,8.3],"HEA":[51.3,8.9],"JUM":[61.5,9.7],"PHY":[56.9,12.6],"AGG":[39.2,11.4],"STA":[55.9,8.7],"VIS":[47.8,5.7],"POS":[53,4.9],"CMP":[48.6,5.2],"REA":[50.5,6.1],"PEN":[56.1,7.5],"INT":[20.2,8.2],"GKR":[9.9,2.9],"GKD":[10.1,3.1],"GKH":[10.1,2.9],"GKK":[10.1,3],"h":[179.7,6.6],"w":[72.6,6.6],"age":[20.2,3],"pot":[11.8,5.5],"wage":[1.5,0.9]},"low":{"n":1788,"SPD":[71.7,10.4],"ACC":[71.1,11.1],"FIN":[64,5],"PAS":[58.3,6.3],"LP":[46.6,10],"CRO":[49.4,11.9],"DRI":[63.7,6.1],"BAL":[63.9,4.6],"TAC":[27.3,11.2],"SLI":[25.3,10.5],"HEA":[58.7,10.4],"JUM":[65.8,11.5],"PHY":[66.3,12.7],"AGG":[50.2,14.5],"STA":[63.9,9.8],"VIS":[54.9,7.7],"POS":[63.3,5.6],"CMP":[58.6,7],"REA":[60.1,5.8],"PEN":[60,8],"INT":[27.4,11.5],"GKR":[10.6,3.1],"GKD":[10.5,3.1],"GKH":[10.6,3.1],"GKK":[10.7,3],"h":[181,6.6],"w":[75.3,6.9],"age":[24.7,4.4],"pot":[5.3,5.4],"wage":[4,3.8]},"mid":{"n":967,"SPD":[73.6,10.5],"ACC":[73,11.5],"FIN":[72.5,5.1],"PAS":[67.2,5.6],"LP":[54.7,10.6],"CRO":[58.3,11.7],"DRI":[71.8,5.8],"BAL":[72.6,4.5],"TAC":[30.8,11.4],"SLI":[27,10.7],"HEA":[66.7,11.4],"JUM":[69.5,11.9],"PHY":[71,12.2],"AGG":[59.7,14],"STA":[69,9.1],"VIS":[63.9,8],"POS":[73.4,4.9],"CMP":[69.5,6.3],"REA":[70.2,5.1],"PEN":[67.2,7.9],"INT":[32.4,11.5],"GKR":[10.6,3.2],"GKD":[10.5,3.1],"GKH":[10.6,3.2],"GKK":[10.6,3.2],"h":[181.3,6.7],"w":[76.6,7.1],"age":[26.8,4],"pot":[2.6,3.5],"wage":[20.9,17.3]},"high":{"n":116,"SPD":[78.7,9.7],"ACC":[79.5,10.5],"FIN":[81.6,5.8],"PAS":[78,5.5],"LP":[66.1,11.5],"CRO":[70.9,10.7],"DRI":[82.3,6.2],"BAL":[83.1,5.2],"TAC":[36.2,12.1],"SLI":[31.1,11.7],"HEA":[68.7,15.1],"JUM":[70.5,12.8],"PHY":[70.7,12.7],"AGG":[63.9,13.3],"STA":[75.2,7.9],"VIS":[76.3,7.9],"POS":[83.5,4.3],"CMP":[80.2,5.7],"REA":[81.9,4.6],"PEN":[75.4,7.7],"INT":[37.2,11.5],"GKR":[9.8,4.1],"GKD":[10.4,3.7],"GKH":[10.8,3.5],"GKK":[10.5,4],"h":[179.9,6.7],"w":[76.1,7.6],"age":[27.7,3.8],"pot":[1.5,2.3],"wage":[105.9,102.8]}},"_meta":{"foot":{"Left":4209,"Right":13938},"skillMoves":{"1":2025,"2":8556,"3":6598,"4":917,"5":51},"nats":[["England",9.1],["Germany",6.6],["Spain",5.9],["Argentina",5.2],["France",5],["Brazil",4.5],["Italy",3.9],["Colombia",3.4],["Japan",2.6],["Netherlands",2.5],["Sweden",2.2],["China PR",2.1],["Chile",2.1],["Republic of Ireland",2],["Mexico",2],["United States",1.9],["Poland",1.9],["Norway",1.9],["Saudi Arabia",1.9],["Denmark",1.8],["Korea Republic",1.8],["Portugal",1.8],["Turkey",1.7],["Austria",1.6]],"total":18147}};
+
+/* 属性定义（14 项 + 分组 + 说明） */
+var ATR={
+  SPD:['速度','身体',1.0], ACC:['加速','身体',0.9], STA:['体能','身体',0.8], PHY:['身体','身体',0.9],
+  FIN:['终结','进攻',1.0], CRO:['传中','进攻',0.9], HEA:['头球','进攻',0.85],
+  PAS:['传球','技术',1.0], VIS:['视野','技术',0.9], DRI:['盘带','技术',1.0], FLA:['花式','技术',0.8],
+  TAC:['抢断','防守',1.0], POS:['站位','防守',0.9], GK:['守门','门将',1.2]
+};
+var ATRKEYS=Object.keys(ATR);
+var ATRGROUP={身体:['SPD','ACC','STA','PHY'],进攻:['FIN','CRO','HEA'],技术:['PAS','VIS','DRI','FLA'],防守:['TAC','POS'],门将:['GK']};
+/* 位置权重（算总评） */
+var WOVR2={
+  GK:{GK:0.62,POS:0.12,PHY:0.10,ACC:0.08,SPD:0.08},
+  DF:{TAC:0.28,POS:0.22,PHY:0.16,HEA:0.12,SPD:0.12,PAS:0.10},
+  MF:{PAS:0.22,VIS:0.14,DRI:0.16,STA:0.14,TAC:0.12,SPD:0.11,PHY:0.11},
+  FW:{FIN:0.26,DRI:0.18,SPD:0.20,ACC:0.12,HEA:0.12,PAS:0.12}
+};
+/* 花式星级（FLA 1-5 星，真实分布：1★11% 2★47% 3★36% 4★5% 5★0.3%） */
+function rollSkillMoves(pos){
+  var r=Math.random(), base = pos==='FW'?0.16:(pos==='MF'?0.13:0.07);
+  if(r<0.010+base*0.02) return 5;
+  if(r<0.060+base) return 4;
+  if(r<0.42+base) return 3;
+  if(r<0.90) return 2;
+  return 1;
+}
+/* 特性（由属性推导，带实际效果） */
+var TRAITS={
+  pacy:{n:'疾风',d:'冲刺速度额外 +8%，长距离回追更快',c:'#7fc4ff'},
+  engine:{n:'铁人',d:'体能消耗降低 35%，全场跑动不掉速',c:'#8fe08f'},
+  playmaker:{n:'组织核心',d:'直塞球精度 +25%，传球选择更聪明',c:'#ffd76e'},
+  crosser:{n:'传中专家',d:'传中落点精度 +30%',c:'#ffb37f'},
+  dribbler:{n:'盘带大师',d:'持球推进速度 +10%，被抢断概率 -15%',c:'#c9a0ff'},
+  skills:{n:'花式王',d:'花式过人成功率 +35%',c:'#ff9fd0'},
+  finisher:{n:'终结者',d:'禁区内射门精度 +30%',c:'#ff9f8f'},
+  target:{n:'空霸',d:'争顶头球成功率 +35%，头球攻门更有力',c:'#ffd0a0'},
+  wall:{n:'铁闸',d:'抢断成功率 +20%，站位拦截范围更大',c:'#a0d8ff'},
+  keeper:{n:'门神',d:'扑救成功率 +12%',c:'#ffe08f'},
+  leader:{n:'领袖',d:'队长：全队士气 +，落后时不慌',c:'#f0dfae'},
+  wonderkid:{n:'新星',d:'21 岁以下，成长速度翻倍',c:'#8ff0d8'},
+  veteran:{n:'老将',d:'33 岁以上，经验值高，关键球更稳',c:'#c0c0c0'}
+};
+function rollTraits(st,pos,age,pot,ovr,sm){
+  var t=[];
+  if(st.SPD>=85) t.push('pacy');
+  if(st.STA>=84) t.push('engine');
+  if(st.PAS>=80&&st.VIS>=78) t.push('playmaker');
+  if(st.CRO>=80) t.push('crosser');
+  if(st.DRI>=82) t.push('dribbler');
+  if(sm>=4) t.push('skills');
+  if(st.FIN>=82) t.push('finisher');
+  if(st.HEA>=78&&st.PHY>=74) t.push('target');
+  if(st.TAC>=76&&st.PHY>=70) t.push('wall');
+  if(pos==='GK'&&st.GK>=79) t.push('keeper');
+  if(age<=21&&pot-ovr>=6) t.push('wonderkid');
+  if(age>=33) t.push('veteran');
+  // 领袖：随机给表现好的老将
+  if(age>=27&&ovr>=78&&Math.random()<0.35) t.push('leader');
+  if(!t.length) t.push(Math.random()<0.5?'engine':'pacy');
+  return t.slice(0,Math.min(3,t.length));
+}
+/* ===================== 程序生成头像（每人唯一） ===================== */
+var SKINS=[['#f2d3b3','#e0b48c'],['#e8bd93','#d19e6f'],['#c98d5c','#a9713f'],['#8d5a34','#6f4526'],['#6b4226','#523118'],['#4a2c17','#361f0f']];
+var HAIRC=['#1b1310','#2b1c12','#4a2f1a','#6b4a24','#a8783c','#d8b56a','#8a2b1b','#c8c8c8','#e8e8e8'];
+var HAIRS=['短发','寸头','卷发','长发','光头','马尾','爆炸头'];
+function hashStr(s){ var h=2166136261; for(var i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619) } return h>>>0; }
+function rngFrom(seed){ var x=seed||1; return function(){ x^=x<<13; x>>>=0; x^=x>>17; x^=x<<5; x>>>=0; return x/4294967296 } }
+function makeLook(name,pos){
+  var r=rngFrom(hashStr(name)+pos.length);
+  return { skin:Math.floor(r()*SKINS.length), hairS:Math.floor(r()*HAIRS.length), hairC:Math.floor(r()*HAIRC.length),
+    beard:Math.floor(r()*5), shape:Math.floor(r()*3), eye:Math.floor(r()*4), brow:Math.floor(r()*3), mouth:Math.floor(r()*3) };
+}
+function avatarSVG(p,size){
+  var L=p.look||(p.look=makeLook(p.name,p.pos)); size=size||40;
+  var sk=SKINS[L.skin][0], sh=SKINS[L.skin][1], hc=HAIRC[L.hairC];
+  var faceW=L.shape===0?30:(L.shape===1?33:28), faceH=L.shape===0?36:(L.shape===1?34:38);
+  var cx=50, cy=52;
+  var hair='';
+  var hs=HAIRS[L.hairS];
+  if(hs==='光头') hair='';
+  else if(hs==='寸头') hair='<path d="M'+(cx-faceW/2)+' '+(cy-faceH/2+3)+' q'+faceW/2+' -9 '+faceW+' 0 l0 3 q-'+faceW/2+' -6 -'+faceW+' 0 z" fill="'+hc+'"/>';
+  else if(hs==='短发') hair='<path d="M'+(cx-faceW/2-1)+' '+(cy-2)+' q-2 -'+(faceH/2+6)+' '+(faceW/2+1)+' -'+(faceH/2+7)+' q'+(faceW/2+1)+' 1 '+(faceW/2+1)+' '+(faceH/2+7)+' l-3 2 q-1 -'+(faceH/2+2)+' -'+(faceW/2-1)+' -'+(faceH/2+2)+' q-'+(faceW/2-1)+' 0 -'+(faceW/2-1)+' '+(faceH/2+2)+' z" fill="'+hc+'"/>';
+  else if(hs==='卷发'){ hair='<g fill="'+hc+'">'; for(var a=0;a<9;a++){ var ang=Math.PI*(0.08+a*0.105); hair+='<circle cx="'+(cx+Math.cos(ang)*(-faceW/2-1)).toFixed(1)+'" cy="'+(cy-Math.sin(ang)*(faceH/2+2)).toFixed(1)+'" r="5.2"/>' } hair+='</g>' }
+  else if(hs==='长发') hair='<path d="M'+(cx-faceW/2-3)+' '+(cy+faceH/2+8)+' q-3 -'+(faceH+10)+' '+(faceW/2+3)+' -'+(faceH/2+9)+' q'+(faceW/2+3)+' 0 '+(faceW/2+3)+' '+(faceH/2+9)+' l3 '+(faceH/2+6)+' l-6 -2 q-3 -'+(faceH/2+4)+' -'+(faceW/2-3)+' -'+(faceH/2+4)+' q-'+(faceW/2-3)+' 0 -'+(faceW/2-3)+' '+(faceH/2+4)+' z" fill="'+hc+'"/>';
+  else if(hs==='马尾') hair='<path d="M'+(cx-faceW/2-1)+' '+(cy-4)+' q-2 -'+(faceH/2+6)+' '+(faceW/2+1)+' -'+(faceH/2+7)+' q'+(faceW/2+1)+' 1 '+(faceW/2+1)+' '+(faceH/2+7)+' l-3 1 q-1 -'+(faceH/2+3)+' -'+(faceW/2-1)+' -'+(faceH/2+3)+' q-'+(faceW/2-1)+' 0 -'+(faceW/2-1)+' '+(faceH/2+3)+' z" fill="'+hc+'"/><circle cx="'+(cx+faceW/2+2)+'" cy="'+(cy+faceH/2+4)+'" r="5" fill="'+hc+'"/>';
+  else hair='<g fill="'+hc+'">'+[-1,-0.6,-0.2,0.2,0.6,1].map(function(k){ return '<circle cx="'+(cx+k*(faceW/2+1)).toFixed(1)+'" cy="'+(cy-faceH/2-1+(Math.abs(k)>0.7?3:0)).toFixed(1)+'" r="6.4"/>' }).join('')+'</g>';
+  var beard='';
+  if(L.beard===1) beard='<path d="M'+(cx-faceW/2+3)+' '+(cy+8)+' q'+(faceW/2-3)+' 12 '+(faceW-6)+' 0 q-2 12 -'+(faceW/2-3)+' 12 q-'+(faceW/2-3)+' 0 -'+(faceW/2-3)+' -12 z" fill="'+hc+'" opacity="0.55"/>';
+  else if(L.beard===2) beard='<path d="M'+(cx-faceW/2+1)+' '+(cy+4)+' q-2 16 '+(faceW/2-1)+' 17 q'+(faceW/2+1)+' -1 '+(faceW/2-1)+' -17 q-'+(faceW/2-2)+' 7 -'+(faceW-2)+' 0 z" fill="'+hc+'" opacity="0.9"/>';
+  else if(L.beard===3) beard='<path d="M'+(cx-6)+' '+(cy+15)+' q6 10 12 0 q-2 12 -6 12 q-4 0 -6 -12 z" fill="'+hc+'"/>';
+  else if(L.beard===4) beard='<path d="M'+(cx-9)+' '+(cy+9)+' q9 5 18 0 q-2 5 -9 5 q-7 0 -9 -5 z" fill="'+hc+'" opacity="0.85"/>';
+  var eyeC=['#3a2a1a','#2a4a6b','#3a5a3a','#4a3a2a'][L.eye];
+  var browW=L.brow===0?1.6:(L.brow===1?2.4:2);
+  var mouthY=cy+13, mouth=L.mouth===0?0:(L.mouth===1?2:-2);
+  return '<svg viewBox="0 0 100 100" width="'+size+'" height="'+size+'" style="display:block">'+
+    '<defs><linearGradient id="bg'+p.id+'" x1="0" y1="0" x2="0" y2="1">'+
+    '<stop offset="0" stop-color="'+sh+'"/><stop offset="1" stop-color="'+sk+'"/></linearGradient></defs>'+
+    '<rect width="100" height="100" rx="8" fill="#14261c"/>'+
+    '<ellipse cx="50" cy="96" rx="42" ry="18" fill="#1d3a28"/>'+
+    '<path d="M'+(cx-11)+' '+(cy+faceH/2-4)+' h22 v10 q-11 6 -22 0 z" fill="'+sh+'"/>'+   /* 脖子 */
+    '<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+(faceW/2)+'" ry="'+(faceH/2)+'" fill="'+sk+'"/>'+ /* 脸 */
+    '<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+(faceW/2)+'" ry="'+(faceH/2)+'" fill="url(#bg'+p.id+')" opacity="0.28"/>'+
+    hair+
+    '<ellipse cx="'+(cx-6)+'" cy="'+(cy-2)+'" rx="2.6" ry="1.9" fill="#fff"/><ellipse cx="'+(cx+6)+'" cy="'+(cy-2)+'" rx="2.6" ry="1.9" fill="#fff"/>'+
+    '<circle cx="'+(cx-6)+'" cy="'+(cy-2)+'" r="1.5" fill="'+eyeC+'"/><circle cx="'+(cx+6)+'" cy="'+(cy-2)+'" r="1.5" fill="'+eyeC+'"/>'+
+    '<rect x="'+(cx-9.5)+'" y="'+(cy-7)+'" width="7" height="'+browW+'" rx="1" fill="'+hc+'" opacity="0.9" transform="rotate(-6 '+(cx-6)+' '+(cy-6)+')"/>'+
+    '<rect x="'+(cx+2.5)+'" y="'+(cy-7)+'" width="7" height="'+browW+'" rx="1" fill="'+hc+'" opacity="0.9" transform="rotate(6 '+(cx+6)+' '+(cy-6)+')"/>'+
+    '<path d="M'+cx+' '+(cy+1)+' l-2.2 5 h4.4 z" fill="'+sh+'"/>'+
+    beard+
+    '<path d="M'+(cx-5)+' '+(mouthY)+' q5 '+mouth+' 10 0" stroke="#7a4a3a" stroke-width="1.8" fill="none" stroke-linecap="round"/>'+
+    '</svg>';
+}
+/* ===================== 补充姓名库（对应真实国籍分布） ===================== */
+NAMES['哥伦比亚']={g:['胡安','卡洛斯','路易斯','安德烈斯','圣地亚哥','米格尔','戴维','奥斯卡'],
+ s:['罗德里格斯','夸德拉多','穆列尔','桑切斯','米纳','迪亚斯','巴卡','阿里亚斯','莫雷诺','博雷']};
+NAMES['瑞典']={g:['亚历山大','维克托','埃米尔','奥斯卡','卢卡斯','菲利普','安东','延斯'],
+ s:['拉尔森','安德松','约翰松','尼尔松','埃里克松','斯文松','林德贝里','贝里','霍尔姆','福斯贝里']};
+NAMES['中国']={g:['伟','磊','强','浩','鹏','鑫','博','宇航','子豪','俊杰'],
+ s:['王','李','张','刘','陈','杨','赵','黄','周','吴']};
+NAMES['智利']={g:['阿图罗','加里','爱德华多','查尔斯','迭戈','毛里西奥','克劳迪奥','让'],
+ s:['梅德尔','巴尔加斯','伊斯拉','比达尔','桑切斯','阿朗吉斯','普尔加','迪亚斯','博塞茹尔']};
+NAMES['爱尔兰']={g:['谢默斯','罗比','约翰','科诺','达里尔','杰森','马特','恩达'],
+ s:['墨菲','布雷迪','杜菲','霍根','奥谢','麦卡锡','卡伦','奥布莱恩','鲍尔']};
+NAMES['墨西哥']={g:['吉列尔莫','伊尔文','埃克托','劳尔','安赫尔','希尔','埃德森','路易斯'],
+ s:['奥乔亚','洛萨诺','埃雷拉','希门尼斯','阿吉雷','阿尔瓦雷斯','瓜尔达多','科罗纳','皮内达']};
+NAMES['美国']={g:['克里斯蒂安','韦斯顿','泰勒','杰克','布伦登','尤努斯','里卡多','亚伦'],
+ s:['普利西奇','麦肯尼','亚当斯','里姆','阿伦森','穆萨','维阿','斯特芬','隆巴德']};
+NAMES['波兰']={g:['罗伯特','彼得','雅库布','沃伊切赫','格热戈日','卡米尔','巴尔托什','什切潘'],
+ s:['莱万多夫斯基','齐林斯基','什琴斯尼','格利克','贝德纳雷克','别利克','弗兰科夫斯基','卡什']};
+NAMES['挪威']={g:['埃尔林','马丁','亚历山大','克里斯托弗','斯特凡','马蒂亚斯','延斯','桑德尔'],
+ s:['哈兰德','厄德高','索尔洛特','阿热','贝里','斯特兰德贝里','诺曼','佩德森']};
+NAMES['沙特']={g:['萨勒姆','法赫德','亚西尔','穆罕默德','阿卜杜拉','萨利赫','纳瓦夫','哈立德'],
+ s:['多萨里','穆瓦拉德','沙赫拉尼','布莱希','奥泰夫','加纳姆','哈桑','法拉吉']};
+NAMES['丹麦']={g:['克里斯蒂安','卡斯珀','西蒙','约阿基姆','安德烈亚斯','马丁','米克尔','延斯'],
+ s:['埃里克森','舒梅切尔','克亚尔','德莱尼','瓦斯','多尔贝里','斯科夫','霍伊别尔']};
+NAMES['韩国']={g:['孙','黄','李','金','奇','郑','赵','权','朴','尹'],
+ s:['兴慜','喜灿','康仁','玟哉','诚佑','又荣','贤祐','昶勋','智洙','정']};
+NAMES['土耳其']={g:['哈坎','阿尔达','布拉克','恰拉尔','梅里赫','坚克','奥赞','尤素福'],
+ s:['恰尔汗奥卢','图兰','耶尔马兹','瑟云聚','代米拉尔','托松','卡巴克','云代尔']};
+NAMES['奥地利']={g:['马塞尔','大卫','康拉德','马克','亚历山大','克里斯托夫','斯特凡','弗洛里安'],
+ s:['萨比策','阿拉巴','莱默尔','鲍姆加特纳','绍布','林德纳','格雷戈里奇','施拉格尔']};
+NATS=Object.keys(NAMES);
+/* 数据集英文国籍 → 中文姓名库 */
+var ENG2CN={England:'英格兰',Germany:'德国',Spain:'西班牙',Argentina:'阿根廷',France:'法国',Brazil:'巴西',
+ Italy:'意大利',Colombia:'哥伦比亚',Japan:'日本',Netherlands:'荷兰',Sweden:'瑞典','China PR':'中国',
+ Chile:'智利','Republic of Ireland':'爱尔兰',Mexico:'墨西哥','United States':'美国',Poland:'波兰',
+ Norway:'挪威','Saudi Arabia':'沙特',Denmark:'丹麦','Korea Republic':'韩国',Portugal:'葡萄牙',
+ Turkey:'土耳其',Austria:'奥地利',Belgium:'比利时',Croatia:'克罗地亚',Uruguay:'阿根廷',Serbia:'克罗地亚',
+ Switzerland:'奥地利',Ghana:'塞内加尔',Senegal:'塞内加尔',Morocco:'土耳其',Nigeria:'塞内加尔',
+ Algeria:'土耳其',Peru:'哥伦比亚',Venezuela:'哥伦比亚',Ecuador:'哥伦比亚',Greece:'意大利',
+ Russia:'波兰',Ukraine:'波兰',Czechia:'波兰',Hungary:'波兰',Romania:'波兰',Finland:'瑞典',
+ Iceland:'挪威',Wales:'英格兰',Scotland:'爱尔兰','Northern Ireland':'爱尔兰',Australia:'英格兰',
+ Canada:'美国','Costa Rica':'墨西哥',Jamaica:'美国',Tunisia:'土耳其',Egypt:'土耳其',Cameroon:'塞内加尔',
+ 'Ivory Coast':'塞内加尔','South Africa':'塞内加尔',Paraguay:'阿根廷',Bolivia:'阿根廷',Bulgaria:'波兰',
+ Slovakia:'波兰',Slovenia:'克罗地亚','Bosnia Herzegovina':'克罗地亚',Albania:'克罗地亚',Israel:'土耳其',
+ Iran:'沙特','United Arab Emirates':'沙特',Qatar:'沙特',Uzbekistan:'沙特'};
+/* 属性中文名表（覆盖旧 STATN） */
+var STATN={}; ATRKEYS.forEach(function(k){ STATN[k]=ATR[k][0] });
 /* ===================== 生涯引擎 ===================== */
 var G=null, SAVEKEY='fc_career_slots';
 function cl(x){ return CLUBS.filter(function(c){return c.id===x})[0]; }
@@ -217,36 +379,66 @@ function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&am
 /* ---------- 球员生成 ---------- */
 var PID=1;
 function genName(nat){
-  var P=NAMES[nat]; return pick(P.g)+'·'+pick(P.s);
+  var P=NAMES[nat]||NAMES['巴西'];
+  return pick(P.g)+'·'+pick(P.s);
+}
+/* 按真实国籍分布抽国籍 */
+function pickNation(){
+  var list=GEN._meta.nats, total=0;
+  for(var i=0;i<list.length;i++) total+=list[i][1];
+  var r=Math.random()*total, acc=0;
+  for(i=0;i<list.length;i++){ acc+=list[i][1]; if(r<=acc) { var nm=ENG2CN[list[i][0]]; return nm&&NAMES[nm]? nm : pick(NATS); } }
+  return pick(NATS);
+}
+/* 采样正态分布 */
+function norm(m,sd){ var u=0,v=0; while(!u) u=Math.random(); while(!v) v=Math.random();
+  return m + sd*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+/* 根据球队实力选档位 */
+function tierFor(rating){
+  var r=clamp(rating,72,92);
+  if(r>=85) return Math.random()<0.45?'high':'mid';
+  if(r>=81) return Math.random()<0.18?'high':'mid';
+  if(r>=77) return Math.random()<0.10?'mid':'low';
+  return Math.random()<0.25?'low':'base';
 }
 function genPlayer(clubRating, preferPos, opts){
   opts=opts||{};
-  var nat=pick(NATS);
-  var pos=preferPos||(Math.random()<0.09?'GK':(Math.random()<0.42?'DF':(Math.random()<0.72?'MF':'FW')));
-  var age=opts.age!==undefined?opts.age:ri(17,35);
-  var peak=26;
-  var ageF=age<21?0.80:(age<24?0.92:(age<=peak?1:(age<=30?0.97:(age<=33?0.90:0.80))));
-  var base=clamp(clubRating-6+gauss()*7,44,92);
-  var pot=clamp(base+(age<23? ri(3,12): ri(0,4)), 45, 96);
+  var nat=pickNation();
+  var pos=preferPos||(Math.random()<0.10?'GK':(Math.random()<0.42?'DF':(Math.random()<0.72?'MF':'FW')));
+  var tier=(opts.tier||tierFor(clubRating));
+  var G2=(GEN[pos]&&(GEN[pos][tier]||GEN[pos].mid))||GEN.MF.mid;
+  var age=opts.age!==undefined?opts.age:Math.round(clamp(norm(G2.age[0],G2.age[1]),16,40));
   var st={};
-  var keys=['SPD','SHO','PAS','DRI','DEF','PHY','STAM','GK'];
-  keys.forEach(function(k){
-    var v=base+gauss()*6;
-    if(k==='GK') v=(pos==='GK')? clamp(base+gauss()*4,40,95) : ri(8,25);
-    if(pos==='DF'&&(k==='DEF'||k==='PHY')) v+=7;
-    if(pos==='MF'&&(k==='PAS'||k==='STAM')) v+=7;
-    if(pos==='FW'&&(k==='SHO'||k==='DRI'||k==='SPD')) v+=7;
-    if(pos==='GK'&&k!=='GK') v-=14;
-    st[k]=Math.round(clamp(v*ageF + (peak-age)*0, 20, 99));
+  ATRKEYS.forEach(function(k){
+    var d=G2[k]||GEN.MF.mid[k]||[55,10];
+    var v=norm(d[0],d[1]);
+    // 年龄影响：年轻未成型，30 岁后巅峰属性下滑
+    if(age<21) v-= (21-age)*1.6;
+    else if(age>30) v-= (age-30)*(k==='SPD'||k==='ACC'||k==='STA'?1.9:0.9);
+    // 球队实力微调
+    v += (clubRating-G2_refClamp(clubRating))*0.0;
+    st[k]=Math.round(clamp(v,18,97));
   });
-  var p={ id:'p'+(PID++), name:genName(nat), nat:nat, pos:pos, age:age, st:st,
-          pot:Math.round(pot), form:ri(60,85), fit:100, mor:ri(65,88), goals:0, assists:0, apps:0,
-          club:null, inj:0, yellows:0, reds:0, rating:0, ratingN:0 };
-  p.ovr=ovrOf(p); p.value=valueOf(p); p.wage=wageOf(p); p.contract=ri(1,4);
+  var potBase=ovrOf({pos:pos,st:st});
+  var growth = age<=20? Math.abs(norm(11,5)) : (age<=23? Math.abs(norm(7,4)) : (age<=26? Math.abs(norm(3,2)) : Math.abs(norm(1,1))));
+  var pot=Math.round(clamp(potBase + growth, potBase, 96));
+  var sm=rollSkillMoves(pos);
+  st.FLA=Math.round(clamp(38+sm*11+norm(0,4),20,97));
+  var foot=Math.random()< (pos==='DF'||pos==='GK'?0.22:0.28) ? '左脚' : '右脚';
+  var p={ id:'p'+(PID++), name:genName(nat), nat:nat, pos:pos, age:age, st:st, sm:sm, foot:foot,
+          h:Math.round(clamp(norm(G2.h[0],G2.h[1]),163,205)),
+          w:Math.round(clamp(norm(G2.w[0],G2.w[1]),55,102)),
+          pot:pot, form:ri(60,85), fit:100, mor:ri(65,88), goals:0, assists:0, apps:0,
+          club:null, inj:0, yellows:0, reds:0, rating:0, ratingN:0, caps:0 };
+  p.ovr=ovrOf(p);
+  p.traits=rollTraits(st,pos,age,pot,p.ovr,sm);
+  p.look=makeLook(p.name,p.pos);
+  p.value=valueOf(p); p.wage=wageOf(p); p.contract=ri(1,4);
   return p;
 }
+function G2_refClamp(x){ return x; }
 function ovrOf(p){
-  var w=WOVR[p.pos], t=0, s=0;
+  var w=WOVR2[p.pos]||WOVR2.MF, t=0, s=0;
   for(var k in w){ t+=w[k]*(p.st[k]||50); s+=w[k]; }
   return Math.round(t/s);
 }
@@ -312,9 +504,10 @@ function tuneSquads(){
     var diff=Math.round(c.r-avg);
     if(diff!==0){
       ids.forEach(function(p){ if(p.club!==c.id) return;
-        var w=WOVR[p.pos], d=clamp(diff,-8,8);
-        for(var k in w) p.st[k]=Math.round(clamp(p.st[k]+d,20,99));
+        var w=WOVR2[p.pos]||WOVR2.MF, d=clamp(diff,-9,9);
+        for(var k in w) p.st[k]=Math.round(clamp(p.st[k]+d,18,97));
         p.ovr=ovrOf(p); p.value=valueOf(p); p.wage=wageOf(p);
+        p.traits=rollTraits(p.st,p.pos,p.age,Math.max(p.pot,p.ovr),p.ovr,p.sm||2);
       });
     }
   });
@@ -693,7 +886,8 @@ function vSquad(){
   G.bench.forEach(function(pid){
     var p=G.players[pid];
     h+='<div class="row" data-act="pdetail" data-i="'+p.id+'"><span class="pos POS-'+p.pos+'">'+p.pos+'</span>'+
-      '<div class="nm"><b>'+esc(p.name)+'</b><small>'+p.ovr+' · '+p.age+'岁 · '+p.nat+' · 状态'+(p.form>=80?'火热':p.form>=65?'一般':'低迷')+'</small></div>'+
+      avatarSVG(p,30)+
+      '<div class="nm"><b>'+esc(p.name)+'</b><small>'+p.ovr+' · '+p.age+'岁 · '+p.nat+' · 花式'+p.sm+'★ · '+(p.traits||[]).map(function(t){return TRAITS[t]?TRAITS[t].n:''}).join('/')+'</small></div>'+
       '<div class="vl">'+fmtM(p.value)+'<br><span style="color:'+fitColor(p.fit)+'">体能'+Math.round(p.fit)+'</span></div></div>';
   });
   h+='</div>';
@@ -701,24 +895,48 @@ function vSquad(){
   var sq=mySquad().sort(sortSquad);
   sq.forEach(function(p){
     h+='<div class="row" data-act="pdetail" data-i="'+p.id+'"><span class="pos POS-'+p.pos+'">'+p.pos+'</span>'+
+      avatarSVG(p,30)+
       '<div class="nm"><b>'+esc(p.name)+(G.lineup.indexOf(p.id)>=0?' <span style="color:#2ea36a">首发</span>':'')+'</b>'+
-      '<small>总评 '+p.ovr+' · '+p.age+'岁 · 合同'+p.contract+'年 · 周薪'+p.wage+'万</small></div>'+
-      '<div class="vl">'+fmtM(p.value)+'</div></div>';
+      '<small>'+p.ovr+' · '+p.age+'岁 · '+p.h+'cm · '+(p.traits||[]).map(function(t){return TRAITS[t]?TRAITS[t].n:''}).join('/')+'</small></div>'+
+      '<div class="vl">'+fmtM(p.value)+'<br><span class="mut">'+p.foot+' '+p.sm+'★</span></div></div>';
   });
   h+='</div>';
   return h;
 }
+function starStr(n){ var s=''; for(var i=1;i<=5;i++) s+= i<=n? '★':'☆'; return s }
+function attrBars(p){
+  var out='';
+  Object.keys(ATRGROUP).forEach(function(g){
+    if(g==='门将' && p.pos!=='GK') return;
+    out+='<div style="font-size:11.5px;color:#c9a227;margin:9px 0 4px">'+g+'</div><div class="grid2" style="gap:3px 10px">';
+    ATRGROUP[g].forEach(function(k){
+      var v=p.st[k]||0;
+      out+='<div style="display:flex;align-items:center;gap:5px"><span style="width:28px;font-size:11px;color:#9ec4a8">'+ATR[k][0]+'</span>'+
+        '<div class="bar" style="flex:1;margin:0"><i style="width:'+v+'%;background:'+ovrClass(v)+'"></i></div>'+
+        '<span style="font-size:11px;width:19px;text-align:right;color:'+ovrClass(v)+'">'+v+'</span></div>';
+    });
+    out+='</div>';
+  });
+  return out;
+}
+function traitChips(p){
+  return (p.traits||[]).map(function(t){ var T=TRAITS[t]; if(!T) return '';
+    return '<div style="display:flex;gap:7px;align-items:flex-start;background:#0c1f14;border:1px solid '+T.c+'44;border-radius:7px;padding:6px 8px;margin:4px 0">'+
+      '<span style="color:'+T.c+';font-weight:700;font-size:12.5px;white-space:nowrap">'+T.n+'</span>'+
+      '<span style="font-size:11px;color:#9ec4a8;line-height:1.45">'+T.d+'</span></div>' }).join('');
+}
 function pdetail(pid){
-  var p=G.players[pid], inXI=G.lineup.indexOf(pid)>=0, inBench=G.bench.indexOf(pid)>=0;
-  var bars=Object.keys(STATN).map(function(k){
-    return '<div style="display:flex;align-items:center;gap:6px;margin:3px 0"><span style="width:32px;font-size:11px;color:#9ec4a8">'+STATN[k]+'</span>'+
-      '<div class="bar" style="flex:1;margin:0"><i style="width:'+p.st[k]+'%;background:'+ovrClass(p.st[k])+'"></i></div><span style="font-size:11px;width:20px;text-align:right">'+p.st[k]+'</span></div>';
-  }).join('');
-  showModal('<h3>'+esc(p.name)+' <span style="font-size:12px;color:#7fa88c">'+POSN[p.pos]+' · '+p.nat+' · '+p.age+'岁</span></h3>'+
-    '<div class="grid3" style="margin-bottom:10px"><div class="kv"><b>'+p.ovr+'</b><small>总评</small></div>'+
-    '<div class="kv"><b>'+p.pot+'</b><small>潜力</small></div><div class="kv"><b>'+fmtM(p.value)+'</b><small>身价</small></div></div>'+
-    bars+
-    '<div class="mut" style="margin:8px 0">状态 '+p.form+' ｜ 体能 '+Math.round(p.fit)+' ｜ 士气 '+p.mor+' ｜ 周薪 '+p.wage+'万 ｜ 合同 '+p.contract+' 年 ｜ 本赛季 '+p.apps+' 场 '+p.goals+' 球</div>'+
+  var p=G.players[pid], inXI=G.lineup.indexOf(pid)>=0;
+  showModal(
+    '<div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">'+avatarSVG(p,62)+
+      '<div style="flex:1;min-width:0"><div style="font-size:16px;font-weight:700;color:#f0dfae">'+esc(p.name)+'</div>'+
+      '<div class="mut">'+POSN[p.pos]+' · '+p.nat+' · '+p.age+'岁 · '+p.h+'cm/'+p.w+'kg · '+p.foot+' · 花式 '+starStr(p.sm)+'</div></div></div>'+
+    '<div class="grid3" style="margin-bottom:8px"><div class="kv"><b>'+p.ovr+'</b><small>总评</small></div>'+
+      '<div class="kv"><b style="color:'+(p.pot>p.ovr?'#8fe08f':'#ffd76e')+'">'+p.pot+'</b><small>潜力</small></div>'+
+      '<div class="kv"><b>'+fmtM(p.value)+'</b><small>身价</small></div></div>'+
+    traitChips(p)+
+    attrBars(p)+
+    '<div class="mut" style="margin:9px 0">状态 '+p.form+' ｜ 体能 '+Math.round(p.fit)+' ｜ 士气 '+p.mor+' ｜ 周薪 '+p.wage+' 万 ｜ 合同 '+p.contract+' 年 ｜ 本季 '+p.apps+' 场 '+p.goals+' 球 '+p.assists+' 助</div>'+
     '<div class="grid2"><button class="btn '+(inXI?'g':'')+'" data-act="swap" data-i="'+pid+'">'+(inXI?'换下（进替补）':'放入首发')+'</button>'+
     '<button class="btn g" data-act="train1" data-i="'+pid+'">训练（剩 '+G.trainPts+' 点）</button></div>'+
     '<div style="margin-top:8px"><button class="btn y" style="width:100%" data-act="list" data-i="'+pid+'">挂牌出售（估值 '+fmtM(p.value)+'）</button></div>'+
@@ -764,8 +982,9 @@ function vTransfer(){
   list.forEach(function(p){
     var fee=(p.club==='FA'?0:askingPrice(p));
     h+='<div class="row" data-act="offer" data-i="'+p.id+'"><span class="pos POS-'+p.pos+'">'+p.pos+'</span>'+
-      '<div class="nm"><b>'+esc(p.name)+'</b><small>'+p.ovr+' · '+p.age+'岁 · '+p.nat+' · '+esc(p.club==='FA'?'自由球员':cl(p.club).n)+' · 要价 '+(fee?fmtM(fee):'免签')+'</small></div>'+
-      '<div class="vl">'+fmtM(p.value)+'<br><span class="mut">薪'+p.wage+'万</span></div></div>';
+      avatarSVG(p,30)+
+      '<div class="nm"><b>'+esc(p.name)+'</b><small>'+p.ovr+' · '+p.age+'岁 · '+p.nat+' · 花式'+p.sm+'★ · '+esc(p.club==='FA'?'自由球员':cl(p.club).n)+'</small></div>'+
+      '<div class="vl">'+(fee?fmtM(fee):'免签')+'<br><span class="mut">薪'+p.wage+'万</span></div></div>';
   });
   h+='</div>';
   return h;
@@ -826,7 +1045,8 @@ function vTrain(){
   h+='<div class="card"><h3>球员（按潜力排序）</h3>';
   sq.slice(0,20).forEach(function(p){
     h+='<div class="row" data-act="trainsel" data-i="'+p.id+'"><span class="pos POS-'+p.pos+'">'+p.pos+'</span>'+
-      '<div class="nm"><b>'+esc(p.name)+'</b><small>'+p.ovr+' / 潜力 '+p.pot+' · '+p.age+'岁</small></div>'+
+      avatarSVG(p,30)+
+      '<div class="nm"><b>'+esc(p.name)+'</b><small>'+p.ovr+' / 潜力 '+p.pot+' · '+p.age+'岁 · '+(p.traits||[]).map(function(t){return TRAITS[t]?TRAITS[t].n:''}).join('/')+'</small></div>'+
       '<div class="vl">'+(p.ovr<p.pot?'<span style="color:#8fe08f">可成长</span>':'<span class="mut">已成型</span>')+'</div></div>';
   });
   h+='</div>';
@@ -834,8 +1054,14 @@ function vTrain(){
 }
 function trainSel(pid){
   var p=G.players[pid];
-  var btns=Object.keys(STATN).map(function(k){
-    return '<button class="btn g sm" style="margin:3px" data-act="dotrain" data-i="'+pid+'" data-k="'+k+'">'+STATN[k]+' '+p.st[k]+'</button>' }).join('');
+  var btns='';
+  Object.keys(ATRGROUP).forEach(function(g){
+    if(g==='门将'&&p.pos!=='GK') return;
+    btns+='<div style="font-size:11px;color:#c9a227;margin:6px 0 2px">'+g+'</div>';
+    ATRGROUP[g].forEach(function(k){
+      btns+='<button class="btn '+(p.st[k]>=90?'y':'g')+' sm" style="margin:3px" data-act="dotrain" data-i="'+pid+'" data-k="'+k+'">'+ATR[k][0]+' '+p.st[k]+'</button>';
+    });
+  });
   showModal('<h3>训练 '+esc(p.name)+'</h3><div class="mut" style="margin-bottom:8px">剩余训练点：'+G.trainPts+'。选择要强化的属性（小幅随机成长）。</div><div>'+btns+'</div>'+
     '<div class="center" style="margin-top:12px"><button class="btn g sm" data-act="close">关闭</button></div>');
 }
@@ -988,7 +1214,7 @@ function dist(a,b){ return Math.hypot(a.x-b.x,a.y-b.y); }
 
 function buildMatch(homeId, awayId, opts){
   opts=opts||{};
-  var m={ home:homeId, away:awayId, players:[], ball:{x:52.5,y:34,vx:0,vy:0,own:null},
+  var m={ home:homeId, away:awayId, players:[], ball:{x:52.5,y:34,z:0,vx:0,vy:0,vz:0,own:null},
     score:[0,0], min:0, half:1, dir:[1,-1], ctrl:0, ended:false, paused:false,
     stats:{sh:[0,0],sot:[0,0],pos:[0,0],pass:[0,0]}, events:[], msg:'', msgT:0,
     subs:[0,0], minuteLen:opts.minuteLen||2.6, userTeam:null, mode:opts.mode||'career', lastTouch:null };
@@ -1000,8 +1226,9 @@ function buildMatch(homeId, awayId, opts){
       var side=ti===0?1:-1;
       m.players.push({
         pid:pid, name:p.name.split('·').pop(), full:p.name, team:ti, pos:p.pos, num:pi+1,
-        st:p.st, ovr:p.ovr, x: sl[0]*105*0.5+26.25 + (ti?1:1)*0, y: sl[1]*68*0.7+10,
-        vx:0, vy:0, slot:[sl[0],sl[1]], fit:p.fit, form:p.form, stam:100, cool:0, slide:0
+        st:p.st, ovr:p.ovr, x: sl[0]*105*0.5+26.25, y: sl[1]*68*0.7+10,
+        vx:0, vy:0, slot:[sl[0],sl[1]], fit:p.fit, form:p.form, stam:100, cool:0, slide:0,
+        traits:p.traits||[], h:p.h||180, look:p.look, sm:p.sm||2
       });
     });
   });
@@ -1026,6 +1253,8 @@ function bestXI(cid){
   return out;
 }
 function mTeam(t){ return M.players.filter(function(p){return p.team===t}) }
+function hasT(p,t){ return !!(p && p.traits && p.traits.indexOf(t)>=0) }
+function trait(p,t){ return hasT(p,t) }
 function myTeamIdx(){ return M.userTeam!==null?M.userTeam:0 }
 function attackGoalX(t){ return M.dir[t]>0? PW : 0 }
 function ownGoalX(t){ return M.dir[t]>0? 0 : PW }
@@ -1082,7 +1311,9 @@ function mStep(dt){
       if(mates2.indexOf(p)>=0 && mates2.indexOf(p)<2){ target={x:b.x+b.vx*0.25, y:b.y+b.vy*0.25}; chasing=true; }
     }
     var isCtrl=(p.pid===M.ctrl && p.team===ut && M.mode==='play');
-    var spd=(4.4+(p.st.SPD/99)*3.4)*(0.82+0.18*p.stam/100);
+    var spd=(3.9+Math.pow(p.st.SPD/99,1.32)*4.9)*(0.80+0.20*p.stam/100);
+    if(hasT(p,'pacy')) spd*=1.08;
+    if(hasT(p,'dribbler') && p.pid===M.ctrl) spd*=1.05;
     var tx,ty;
     if(isCtrl){
       tx=target.x; ty=target.y;
@@ -1092,7 +1323,7 @@ function mStep(dt){
       if(mag>1){ vx/=mag; vy/=mag; mag=1 }
       p.vx += (vx*speed - p.vx)*Math.min(1,dt*7);
       p.vy += (vy*speed - p.vy)*Math.min(1,dt*7);
-      if(IN.sprint) p.stam=Math.max(0,p.stam-dt*7);
+      if(IN.sprint) p.stam=Math.max(0,p.stam-dt*7*(hasT(p,'engine')?0.62:1));
     } else {
       var ddx=target.x-p.x, ddy=target.y-p.y, dd=Math.hypot(ddx,ddy)||1;
       var lim=chasing?spd:spd*0.88;
@@ -1117,6 +1348,34 @@ function mStep(dt){
     b.x+=b.vx*dt; b.y+=b.vy*dt;
     var fr=Math.pow(0.36,dt); b.vx*=fr; b.vy*=fr;
     if(Math.abs(b.vx)<0.05) b.vx=0; if(Math.abs(b.vy)<0.05) b.vy=0;
+    // 垂直方向：重力与弹地
+    if(b.z>0 || b.vz!==0){
+      b.vz-=9.8*dt; b.z+=b.vz*dt;
+      if(b.z<=0){ b.z=0;
+        if(Math.abs(b.vz)>1.8){ b.vz=-b.vz*0.45; b.vx*=0.82; b.vy*=0.82; }
+        else { b.vz=0; b.vx*=0.72; b.vy*=0.72; } }
+    }
+    // 空中球：头球攻门 / 解围
+    if(b.z>1.2 && b.z<3.4){
+      for(var hi=0;hi<M.players.length;hi++){
+        var hp=M.players[hi];
+        if(hp.cool>0) continue;
+        if(Math.hypot(hp.x-b.x,hp.y-b.y)<1.9 && !b._headBy){
+          b._headBy=hp.pid;
+          var acc=0.42+(hp.st.HEA/99)*0.42+(hasT(hp,'target')?0.18:0);
+          var gx2=attackGoalX(hp.team), gy2=34;
+          var aerr=(1-acc)*0.9;
+          var ang2=Math.atan2(gy2-b.y,gx2-b.x)+(Math.random()-0.5)*aerr;
+          var pw=(hp.pos==='FW'?13:10)+ (hp.st.HEA/99)*7;
+          b.vx=Math.cos(ang2)*pw; b.vy=Math.sin(ang2)*pw; b.vz=3.4;
+          hp.cool=0.5;
+          M.stats.head=(M.stats.head||[0,0]); M.stats.head[hp.team]++;
+          if(hp.team===myTeamIdx()) { M.stats.sh[hp.team]++; mMsg('头球攻门！'); }
+          else mMsg('对方头球');
+          break;
+        }
+      }
+    } else b._headBy=null;
   }
   // 门将扑救（每脚射门只判定一次）
   if(!b.own){
@@ -1129,7 +1388,7 @@ function mStep(dt){
       var toward=(ggx>52? b.vx>0 : b.vx<0);
       if(bsp>5 && toward && b._gkRoll!==p.pid){
         b._gkRoll=p.pid;
-        var saveP=0.33+(p.st.GK/99)*0.42 - bsp*0.005;
+        var saveP=0.33+(p.st.GK/99)*0.42 - bsp*0.005 + (hasT(p,'keeper')?0.09:0);
         if(Math.random()<saveP){ b.own={i:i}; b.vx=0; b.vy=0; b._gkRoll=null; M.lastTouch=p.team; mMsg('门将扑出！'); }
         else { b.vx*=0.72; b.vy+=(Math.random()-0.5)*5; mMsg(p.team===myTeamIdx()?'危险！':'门将脱手'); }
       }
@@ -1143,18 +1402,22 @@ function mStep(dt){
     if(p.pos==='GK' && b.own) continue;                      // 门将不抢队友的球
     var dd2=Math.hypot(p.x-b.x,p.y-b.y);
     if(dd2<PR+0.4){
+      if(b.z>1.6) continue;                       // 高球不能脚下停球
       if(!b.own){
         var bspd=Math.hypot(b.vx,b.vy);
         var rate = bspd>14? 0.5 : (bspd>7? 2.2 : 9);         // 快球难停
-        var skill=(p.st.DRI*0.6+p.st.DEF*0.4)/99;
+        var skill=(p.st.DRI*0.6+p.st.TAC*0.4)/99;
         if(Math.random() < rate*dt*(0.55+skill*0.75)){
           b.own={i:i}; b.vx=0; b.vy=0; b._gkRoll=null; M.lastTouch=p.team;
         }
       } else {
         var cur=M.players[b.own.i];
         if(cur.team!==p.team && p.cool<=0){
-          var win = 0.36 + (p.st.DEF/99)*0.34 - (cur.st.DRI/99)*0.2;
-          if(Math.random()<win*dt*3.2){ b.own={i:i}; b._gkRoll=null; M.lastTouch=p.team; }
+          var win = 0.36 + (p.st.TAC/99)*0.34 - (cur.st.DRI/99)*0.2;
+          if(hasT(p,'wall')) win+=0.14;
+          if(hasT(cur,'dribbler')) win-=0.10;
+          if(Math.random()<win*dt*3.2){ b.own={i:i}; b._gkRoll=null; M.lastTouch=p.team;
+            M.stats.tkl=(M.stats.tkl||[0,0]); M.stats.tkl[p.team]++; }
         }
       }
     }
@@ -1203,15 +1466,31 @@ function aiCarrier(p,dt){
   var gx=attackGoalX(p.team), goalY=34;
   var dg=Math.hypot(gx-p.x, goalY-p.y);
   if(p.cool>0) return;
-  var shootRange = 21 + (p.st.SHO/99)*10;
+  var pressQ=null, pdq=1e9;
+  for(var qi=0;qi<M.players.length;qi++){ var qq=M.players[qi]; if(qq.team===p.team) continue;
+    var qd=Math.hypot(qq.x-p.x,qq.y-p.y); if(qd<pdq){ pdq=qd; pressQ=qq } }
+  var gx0=attackGoalX(p.team);
+  var wide=(Math.abs(p.y-34)>13) && (gx0>52? p.x>60 : p.x<45);
+  if(wide && dg<36 && Math.random()<dt*4.6){ mCross(p); return; }
+  var mateRun=null;
+  if(p.st.VIS>=68 || hasT(p,'playmaker')){
+    mTeam(p.team).forEach(function(q){ if(q===p||q.pos==='GK') return;
+      var ahead=(gx0>52? q.x-p.x : p.x-q.x);
+      var open=99; M.players.forEach(function(o){ if(o.team===p.team) return; open=Math.min(open,Math.hypot(o.x-q.x,o.y-q.y)) });
+      if(ahead>6 && open>7 && !mateRun) mateRun=q;
+    });
+  }
+  if(pdq<2.9 && (hasT(p,'skills')||p.st.FLA>=68) && Math.random()<dt*(0.22+(p.st.FLA/99)*0.6)){ mSkill(p); return; }
+  if(mateRun && Math.random()<dt*(0.25+(p.st.VIS/99)*0.55)){ mThrough(p); return; }
+  var shootRange = 21 + (p.st.FIN/99)*10;
   var angleOk = Math.abs(p.y-34) < 18 + Math.max(0,(dg-12))*0.6;
   if(dg<shootRange && angleOk && Math.random()<dt*2.6) { mShoot(p); return; }
   // 被逼抢则传球
   var press=null, pd=1e9;
   for(var i=0;i<M.players.length;i++){ var q=M.players[i]; if(q.team===p.team) continue;
     var d=Math.hypot(q.x-p.x,q.y-p.y); if(d<pd){pd=d;press=q} }
-  if(pd<3.2 && Math.random()<dt*2.2){ var tp=mBestPass(p); if(tp) mPass(p,tp); else mShoot(p); return; }
-  if(Math.random()<dt*0.5){ var tp2=mBestPass(p); if(tp2) { mPass(p,tp2); return; } }
+  if(pdq<3.2 && Math.random()<dt*2.2){ var tp=mBestPass(p); if(tp) mPass(p,tp); else mShoot(p); return; }
+  if(Math.random()<dt*0.35){ var tp2=mBestPass(p); if(tp2){ if(Math.random()<0.22 && p.st.PAS>70){ tp2.cool=Math.max(tp2.cool||0,0); mCross(p); } else mPass(p,tp2); return; } }
   // 带球推进：朝球门方向
   var ang=Math.atan2(goalY-p.y, gx-p.x);
   var lead=1.0;
@@ -1237,6 +1516,7 @@ function mBestPass(p){
 function mPass(from,to){
   var b=M.ball, d=Math.hypot(to.x-from.x,to.y-from.y);
   var err=(1-from.st.PAS/140)*0.10*d;
+  if(hasT(from,'playmaker')) err*=0.85;
   var a0=Math.atan2(to.y-from.y,to.x-from.x);
   b.own=null; b._gkRoll=null;
   b.x=from.x+Math.cos(a0)*1.1; b.y=from.y+Math.sin(a0)*1.1;
@@ -1248,12 +1528,111 @@ function mPass(from,to){
   M.stats.pass[from.team]++;
   if(from.team===myTeamIdx()) M.stats.pass[from.team]+=0;
 }
+function mCross(p){                                   /* 传中：弧线吊入禁区 */
+  var b=M.ball, gx=attackGoalX(p.team);
+  b.own=null; b._gkRoll=null; b._headBy=null;
+  var tx=gx-(gx>52?1:-1)*(3.5+Math.random()*4.5);
+  var ty=34+(Math.random()-0.5)*13;
+  var d=Math.hypot(tx-p.x,ty-p.y);
+  var err=(1-(p.st.CRO/99))*(0.10+d*0.010)*(hasT(p,'crosser')?0.62:1);
+  var ang=Math.atan2(ty-p.y,tx-p.x)+(Math.random()-0.5)*err;
+  var sp=Math.min(24, 11+d*0.42);
+  b.x=p.x; b.y=p.y; b.z=0.9;
+  b.vx=Math.cos(ang)*sp; b.vy=Math.sin(ang)*sp;
+  b.vz=6.5+d*0.16;
+  p.cool=0.5; M.lastTouch=p.team;
+  M.stats.cross=(M.stats.cross||[0,0]); M.stats.cross[p.team]++;
+  mMsg(p.team===myTeamIdx()?'传中！':'对方传中');
+}
+function mThrough(p){                                 /* 直塞：塞到队友身前空当 */
+  var mates=mTeam(p.team).filter(function(q){ return q!==p && q.pos!=='GK' });
+  var gx=attackGoalX(p.team), best=null, bs=-1e9;
+  mates.forEach(function(q){
+    var d=Math.hypot(q.x-p.x,q.y-p.y); if(d<4||d>45) return;
+    var ahead=(gx>52? q.x-p.x : p.x-q.x);
+    var open=99;
+    M.players.forEach(function(o){ if(o.team===p.team) return; open=Math.min(open,Math.hypot(o.x-q.x,o.y-q.y)) });
+    var s=ahead*1.6+open*0.9-d*0.2;
+    if(s>bs){ bs=s; best=q }
+  });
+  if(!best){ mPass(p, mTeam(p.team).filter(function(q){return q!==p})[0]||p); return; }
+  var spd=Math.hypot(best.vx,best.vy);
+  var leadX=best.x+(gx>52?1:-1)*(3.5+spd*0.32);
+  var leadY=best.y+best.vy*0.35;
+  var err=(1-(p.st.VIS/99))*0.55*(hasT(p,'playmaker')?0.75:1);
+  M.ball.own=null; M.ball._gkRoll=null;
+  var ang=Math.atan2(leadY-p.y,leadX-p.x)+(Math.random()-0.5)*err*0.5;
+  var d=Math.hypot(leadX-p.x,leadY-p.y);
+  M.ball.x=p.x; M.ball.y=p.y; M.ball.z=0;
+  M.ball.vx=Math.cos(ang)*Math.min(28,10+d*0.7); M.ball.vy=Math.sin(ang)*Math.min(28,10+d*0.7);
+  p.cool=0.36; M.lastTouch=p.team;
+  M.stats.thru=(M.stats.thru||[0,0]); M.stats.thru[p.team]++;
+  if(p.team===myTeamIdx()) mMsg('直塞！');
+}
+function mChip(p){                                    /* 挑射 */
+  var b=M.ball, gx=attackGoalX(p.team), gy=34+(Math.random()<0.5?-1.6:1.6);
+  var d=Math.hypot(gx-p.x,gy-p.y);
+  var err=(1-(p.st.FIN/140))*0.5;
+  b.own=null; b._gkRoll=null; b._headBy=null;
+  var ang=Math.atan2(gy-p.y,gx-p.x)+(Math.random()-0.5)*err;
+  var sp=Math.min(20, 9+d*0.30);
+  b.x=p.x; b.y=p.y; b.z=0.6;
+  b.vx=Math.cos(ang)*sp; b.vy=Math.sin(ang)*sp;
+  b.vz=6.2+d*0.10;
+  p.cool=0.8; M.lastTouch=p.team;
+  M.stats.sh[p.team]++;
+  mMsg(p.team===myTeamIdx()?'挑射！':'对方挑射');
+}
+function mHeader(p){                                  /* 手控头球 */
+  var b=M.ball;
+  if(b.z<1.4) return false;
+  var gx=attackGoalX(p.team);
+  var acc=0.40+(p.st.HEA/99)*0.45+(hasT(p,'target')?0.20:0);
+  b.own=null; b._gkRoll=null; b._headBy=p.pid;
+  var ang=Math.atan2(34-b.y,gx-b.x)+(Math.random()-0.5)*(1-acc)*1.1;
+  var pw=(p.pos==='FW'?13:11)+(p.st.HEA/99)*6;
+  b.vx=Math.cos(ang)*pw; b.vy=Math.sin(ang)*pw; b.vz=2.6;
+  p.cool=0.5; M.lastTouch=p.team;
+  M.stats.sh[p.team]++; M.stats.head=(M.stats.head||[0,0]); M.stats.head[p.team]++;
+  mMsg(p.team===myTeamIdx()?'头球攻门！':'头球解围');
+  return true;
+}
+function mSkill(p){                                   /* 花式过人 */
+  if(p.cool>0) return;
+  var opp=null, bd=1e9;
+  M.players.forEach(function(q){ if(q.team===p.team) return;
+    var d=Math.hypot(q.x-p.x,q.y-p.y); if(d<3.4&&d<bd){ bd=d; opp=q } });
+  var succ=0.40+(p.st.FLA/99)*0.26+(p.st.DRI/99)*0.24;
+  if(hasT(p,'skills')) succ+=0.20;
+  if(hasT(p,'dribbler')) succ+=0.08;
+  if(opp){ succ-=(opp.st.TAC/99)*0.28+(opp.st.POS/99)*0.10; if(hasT(opp,'wall')) succ-=0.10; }
+  M.stats.skill=(M.stats.skill||[0,0]);
+  if(Math.random()<succ){
+    M.stats.skill[p.team]++;
+    var side=(Math.random()<0.5?1:-1);
+    var ang=Math.atan2(p.vy,p.vx||0.001)+side*0.95;
+    var b=M.ball;
+    b.own=null; b._gkRoll=null;
+    b.x=p.x+Math.cos(ang)*3.0; b.y=p.y+Math.sin(ang)*3.0; b.z=0;
+    b.vx=Math.cos(ang)*8.5; b.vy=Math.sin(ang)*8.5;
+    p.vx=Math.cos(ang)*7.8; p.vy=Math.sin(ang)*7.8;
+    p.cool=0.22; p._skillBall=true;
+    M.lastTouch=p.team;
+    mMsg(p.team===myTeamIdx()? '花式过人！':'对方花式');
+  } else {
+    if(opp){ M.ball.own={i:M.players.indexOf(opp)}; M.ball.vx=0; M.ball.vy=0; M.ball.z=0; M.lastTouch=opp.team; }
+    mMsg('花式被断');
+  }
+  p.cool=0.55;
+}
 function mShoot(p){
   var b=M.ball, gx=attackGoalX(p.team);
   var side=(Math.random()<0.5?-1:1);
   var gy=34+side*(1.7+Math.random()*1.8);
   var d=Math.hypot(gx-p.x, gy-p.y);
-  var err=(1-p.st.SHO/135)*(0.04+d*0.010);
+  var err=(1-p.st.FIN/135)*(0.04+d*0.010);
+  if(hasT(p,'finisher') && d<20) err*=0.68;
+  if(hasT(p,'veteran')) err*=0.9;
   var ang0=Math.atan2(p.vy,p.vx);
   b.own=null; b._gkRoll=null;
   b.x=p.x+Math.cos(ang0)*1.2; b.y=p.y+Math.sin(ang0)*1.2;
@@ -1321,7 +1700,7 @@ function mGoal(team){
   M.events.push({team:team, min:Math.round(M.min)});
   mMsg((team===myTeamIdx()?'进球！':'对方进球')+'  '+M.score[0]+' - '+M.score[1]);
   var pc=M.players.filter(function(p){return p.team===team});
-  pc.sort(function(a,b){ return b.st.SHO-a.st.SHO });
+  pc.sort(function(a,b){ return b.st.FIN-a.st.FIN });
   M.scorers=M.scorers||[];
   var shooter=(Math.random()<0.7? pc[0]: (pc[1]||pc[0]));
   M.scorers.push({pid:shooter.pid, club: team===0?M.home:M.away, min:Math.round(M.min)});
@@ -1330,16 +1709,40 @@ function mGoal(team){
 function mMsg(t){ M.msg=t; M.msgT=1.8; if(MonMsg) MonMsg(t); }
 /* ---------- 玩家操作 ---------- */
 function mCtrlPlayer(){ return M.players.filter(function(p){return p.pid===M.ctrl})[0] }
-function mAction(kind){
+function mTackle(p){
+  p.slide=0.4; p.cool=0.5;
+  var b=M.ball;
+  if(Math.hypot(p.x-b.x,p.y-b.y)<2.8){
+    if(b.own && M.players[b.own.i].team!==p.team){
+      var cur=M.players[b.own.i];
+      var ok=0.5+(p.st.TAC/99)*0.4-(cur.st.DRI/99)*0.25+(hasT(p,'wall')?0.15:0);
+      if(Math.random()<ok){ b.own=null; b.vx=(Math.random()-0.5)*7; b.vy=(Math.random()-0.5)*7; b._gkRoll=null; M.lastTouch=p.team;
+        M.stats.tkl=(M.stats.tkl||[0,0]); M.stats.tkl[p.team]++; }
+    }
+    else if(!b.own){ b.own={i:M.players.indexOf(p)}; }
+  }
+}
+function mAction(kind, hold){
   if(!M||M.ended||M.paused) return;
   var ut=myTeamIdx(), p=mCtrlPlayer();
   if(!p) return;
-  if(kind!=='tackle' && p.cool>0) return;      // 出球冷却，防连点
+  if(kind!=='tackle' && p.cool>0) return;
   if(kind==='tackle' && p.slide>0) return;
   var owns = M.ball.own && (M.players[M.ball.own.i]===p);
-  if((kind==='shoot'||kind==='pass') && !owns){ mAction('tackle'); return; }   // 没球时＝逼抢
-  if(kind==='shoot'){ mShoot(p); return; }
+  if((kind==='shoot'||kind==='pass') && !owns){
+    if(kind==='shoot' && M.ball.z>1.3 && Math.hypot(p.x-M.ball.x,p.y-M.ball.y)<2.4){ if(mHeader(p)) return; }
+    mAction('tackle'); return;
+  }
+  if(kind==='shoot'){
+    var gx=attackGoalX(p.team);
+    var wide=Math.abs(p.y-34)>16.5 && (gx>52? p.x>63 : p.x<42);
+    if(wide && !hold) mCross(p);
+    else if(hold) mChip(p);
+    else mShoot(p);
+    return;
+  }
   if(kind==='pass'){
+    if(hold){ mThrough(p); return; }
     // 优先按摇杆方向选人，其次最佳
     if(Math.hypot(IN.x,IN.y)>0.3){
       var ang=Math.atan2(IN.y,IN.x), best=null, bs=-1e9;
@@ -1357,12 +1760,7 @@ function mAction(kind){
     return;
   }
   if(kind==='tackle'){
-    p.slide=0.4; p.cool=0.5;
-    var b=M.ball;
-    if(Math.hypot(p.x-b.x,p.y-b.y)<2.6){
-      if(b.own && M.players[b.own.i].team!==ut){ b.own=null; b.vx=(Math.random()-0.5)*6; b.vy=(Math.random()-0.5)*6; M.lastTouch=ut; }
-      else if(!b.own){ b.own={i:M.players.indexOf(p)}; }
-    }
+    if(owns) mSkill(p); else mTackle(p);
   }
 }
 /* ---------- 比赛循环（渲染层） ---------- */
@@ -1476,14 +1874,25 @@ function mRender(){
   });
   // 球
   var b=M.ball;
-  ctx.beginPath(); ctx.ellipse(b.x+0.15,b.y+0.3,0.6,0.35,0,0,Math.PI*2); ctx.fillStyle='#00000044'; ctx.fill();
-  ctx.beginPath(); ctx.arc(b.x,b.y,0.55,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill();
+  var bh=b.z||0;
+  ctx.beginPath(); ctx.ellipse(b.x+0.15,b.y+0.3,0.62*(1-bh*0.04),0.4*(1-bh*0.04),0,0,Math.PI*2);
+  ctx.fillStyle='rgba(0,0,0,'+(0.35/(1+bh*0.5)).toFixed(2)+')'; ctx.fill();
+  ctx.beginPath(); ctx.arc(b.x, b.y-bh*0.6, 0.55*(1+bh*0.07), 0, Math.PI*2); ctx.fillStyle='#fff'; ctx.fill();
   ctx.lineWidth=0.12; ctx.strokeStyle='#000'; ctx.stroke();
   ctx.restore();
   // HUD
   var sc=$('scoreV'); if(sc) sc.textContent=M.score[0]+' - '+M.score[1];
   var clk=$('clock'); if(clk) clk.textContent=Math.floor(M.min)+"'";
   var mm=$('mMsgIn'); if(mm){ mm.textContent=M.msg; mm.className=M.msg?'on':''; }
+  if(M._lbl!==M.ctrl+'_'+M.ball.own){
+    M._lbl=M.ctrl+'_'+M.ball.own;
+    var cp2=null; for(var ci=0;ci<M.players.length;ci++) if(M.players[ci].pid===M.ctrl) cp2=M.players[ci];
+    var hasBall=M.ball.own && cp2 && M.players[M.ball.own.i]===cp2;
+    var e1=$('btnPass'), e2=$('btnShoot'), e3=$('btnTackle');
+    if(e1) e1.textContent = hasBall? '传球\n长按直塞':'逼抢';
+    if(e2) e2.textContent = hasBall? '射门\n长按挑射':'铲抢';
+    if(e3) e3.textContent = hasBall? '花式':'铲球';
+  }
 }
 function bindMatch(){
   var stick=$('stick'), knob=$('stickKnob');
@@ -1508,9 +1917,19 @@ function bindMatch(){
     el.addEventListener('mousedown',function(e){ e.preventDefault(); on() });
     el.addEventListener('mouseup',function(e){ e.preventDefault(); off&&off() });
   }
-  hold('btnPass',function(){ mAction('pass') });
-  hold('btnShoot',function(){ mAction('shoot') });
-  hold('btnTackle',function(){ mAction('tackle') });
+  function holdBtn(id, down, up){
+    var el=$(id); if(!el) return; var t0=0, held=false;
+    function start(e){ if(e&&e.preventDefault) e.preventDefault(); t0=Date.now(); held=false; down&&down();
+      el._timer=setTimeout(function(){ held=true; if(up) up(true) },260); }
+    function end(e){ if(e&&e.preventDefault) e.preventDefault(); clearTimeout(el._timer);
+      if(!held && up) up(false); }
+    el.addEventListener('touchstart',start,{passive:false});
+    el.addEventListener('touchend',end,{passive:false});
+    el.addEventListener('mousedown',start); el.addEventListener('mouseup',end);
+  }
+  holdBtn('btnPass', null, function(held){ mAction('pass',held) });
+  holdBtn('btnShoot', null, function(held){ mAction('shoot',held) });
+  holdBtn('btnTackle', function(){}, function(){ mAction('tackle') });
   hold('btnSprint',function(){ IN.sprint=true },function(){ IN.sprint=false });
   $('btnPause').onclick=function(){ M.paused=!M.paused; this.textContent=M.paused?'继续':'暂停' };
   $('btnQuit').onclick=function(){ mQuickFinish() };
@@ -1588,7 +2007,12 @@ function finishMatch(res){
   try{ if(typeof r3Dispose==='function') r3Dispose(); }catch(e){}
   var scr=(res.scorers&&res.scorers.length)?res.scorers:matchScorers(M.home,M.away,res.hg,res.ag);
   var st=M.stats, homeName=cl(M.home).n, awayName=cl(M.away).n;
-  var statsHtml='控球 '+Math.round(st.pos[0]/Math.max(0.1,st.pos[0]+st.pos[1])*100)+'% - '+Math.round(st.pos[1]/Math.max(0.1,st.pos[0]+st.pos[1])*100)+'%　射门 '+st.sh[0]+' - '+st.sh[1];
+  var pc2=Math.round(st.pos[0]/Math.max(0.1,st.pos[0]+st.pos[1])*100);
+  var statsHtml='控球 '+pc2+'% - '+(100-pc2)+'%　射门 '+st.sh[0]+' - '+st.sh[1]+
+    '　传中 '+((st.cross||[0,0])[0])+' - '+((st.cross||[0,0])[1])+
+    '　直塞 '+((st.thru||[0,0])[0])+' - '+((st.thru||[0,0])[1])+
+    '　花式成功 '+((st.skill||[0,0])[0])+' - '+((st.skill||[0,0])[1])+
+    '　抢断 '+((st.tkl||[0,0])[0])+' - '+((st.tkl||[0,0])[1]);
   var me=M.userTeam;
   var myG=me===0?res.hg:res.ag, opG=me===0?res.ag:res.hg;
   // 应用到生涯
@@ -1679,16 +2103,31 @@ function r3SkyTexture(){
   var t=new THREE.CanvasTexture(c); return t;
 }
 /* ---------- 球员模型 ---------- */
-var R3GEO={};
+var R3GEO={}, R3NUM={};
+function r3NumberTexture(num, bg, fg){
+  var key=num+'|'+bg+'|'+fg;
+  if(R3NUM[key]) return R3NUM[key];
+  var c=document.createElement('canvas'); c.width=128; c.height=128;
+  var g=c.getContext('2d');
+  g.fillStyle='rgba(0,0,0,0)'; g.fillRect(0,0,128,128);
+  g.fillStyle=fg; g.font='bold 92px sans-serif'; g.textAlign='center'; g.textBaseline='middle';
+  g.fillText(String(num),64,70);
+  var t=new THREE.CanvasTexture(c); R3NUM[key]=t; return t;
+}
 function r3Geo(key,make){ if(!R3GEO[key]) R3GEO[key]=make(); return R3GEO[key]; }
-function r3MakePlayer(team, shirt, shorts, skin){
+function r3MakePlayer(p, team, shirt, shorts){
   var grp=new THREE.Group();
   var box=r3Geo('box',function(){ return new THREE.BoxGeometry(1,1,1) });
   var sph=r3Geo('sph',function(){ return new THREE.SphereGeometry(1,10,8) });
+  var L=p.look||makeLook(p.name,p.pos);
+  var skinCol=SKINS[L.skin]? SKINS[L.skin][0] : '#e0b48c';
+  var hairCol=HAIRC[L.hairC]||'#2b1c12';
   var matShirt=new THREE.MeshLambertMaterial({color:shirt});
   var matShorts=new THREE.MeshLambertMaterial({color:shorts});
-  var matSkin=new THREE.MeshLambertMaterial({color:skin});
+  var matSkin=new THREE.MeshLambertMaterial({color:new THREE.Color(skinCol)});
   var matBoot=new THREE.MeshLambertMaterial({color:0x1a1a1a});
+  var build=0.93+((p.st.PHY||65)/99)*0.20;
+  var hgt=clamp((p.h||180)/180, 0.92, 1.12);
   function part(geo,mat,sx,sy,sz,px,py,pz,parent){
     var m=new THREE.Mesh(geo,mat); m.scale.set(sx,sy,sz); m.position.set(px,py,pz);
     m.castShadow=(R3.q==='high'); (parent||grp).add(m); return m;
@@ -1707,10 +2146,35 @@ function r3MakePlayer(team, shirt, shorts, skin){
   part(box,matShirt,0.13,0.26,0.14,0,-0.13,0,armL);
   part(box,matSkin,0.11,0.34,0.12,0,-0.42,0,armL);
   var armR=armL.clone(); armR.position.x=0.27; grp.add(armR);
-  // 头 + 头发
+  // 头 + 发型（按球员外观数据区分）
   part(sph,matSkin,0.13,0.15,0.13,0,1.62,0);
-  part(sph,new THREE.MeshLambertMaterial({color:0x2a1c12}),0.135,0.1,0.135,0,1.67,-0.01);
-  grp.userData={ legL:legL, legR:legR, armL:armL, armR:armR, phase:Math.random()*6.28, kick:0, speed:0 };
+  var matHair=new THREE.MeshLambertMaterial({color:new THREE.Color(hairCol)});
+  var hs=HAIRS[L.hairS];
+  if(hs!=='光头'){
+    if(hs==='卷发'||hs==='爆炸头'){
+      for(var hi=0;hi<7;hi++){ var ha=hi/7*Math.PI*2;
+        part(sph,matHair,0.075,0.07,0.075, Math.cos(ha)*0.10, 1.70+Math.sin(ha*2)*0.015, Math.sin(ha)*0.10); }
+      part(sph,matHair,0.145,0.11,0.145,0,1.68,0);
+    } else if(hs==='长发'||hs==='马尾'){
+      part(sph,matHair,0.145,0.12,0.145,0,1.69,0);
+      part(box,matHair,0.20,0.26,0.10,0,1.55,-0.11);
+      if(hs==='马尾') part(sph,matHair,0.07,0.14,0.07,0,1.50,-0.16);
+    } else {
+      part(sph,matHair,0.137,0.095,0.137,0,1.675,-0.005);
+    }
+  }
+  // 号码（背号）
+  var numTex=r3NumberTexture(p.num||7, '#000', team===0? '#ffffff':'#111111');
+  var numMat=new THREE.MeshLambertMaterial({map:numTex, transparent:true});
+  var numM=new THREE.Mesh(new THREE.PlaneGeometry(0.3,0.3), numMat);
+  numM.position.set(0,1.20,-0.128); numM.rotation.y=Math.PI; grp.add(numM);
+  // 队长袖标
+  if((p.traits||[]).indexOf('leader')>=0){
+    part(box,new THREE.MeshLambertMaterial({color:0xffd76e}),0.145,0.06,0.152,0.27,-0.30,0,armR);
+  }
+  // 身高体型缩放
+  grp.scale.set(build, hgt, build);
+  grp.userData={ legL:legL, legR:legR, armL:armL, armR:armR, phase:Math.random()*6.28, kick:0, speed:0, hgt:hgt };
   return grp;
 }
 function r3BuildGoal(side){
@@ -1810,8 +2274,8 @@ function r3Init(canvas){
     // 球员
     M.players.forEach(function(p,i){
       var club=cl(p.team===0? M.home:M.away);
-      var skins=[0xe0b48c,0xc98d5c,0x8d5a34,0x6b4226,0xf0c9a0];
-      var g=r3MakePlayer(p.team, club.c, p.team===0?0xffffff:0x1b1b1b, skins[i%skins.length]);
+      var full=G.players[p.pid]||p;
+      var g=r3MakePlayer(full, p.team, club.c, p.team===0?0xffffff:0x1b1b1b);
       g.position.set(p.x,0,z3(p.y));
       R3.scene.add(g);
       R3.players.push(g);
@@ -1864,9 +2328,10 @@ function r3Sync(dt){
     g.position.y = Math.abs(Math.sin(ud.phase))*0.035*amp;
   }
   // 球
-  R3.ball.position.set(b.x, 0.22, z3(b.y));
+  R3.ball.position.set(b.x, 0.22+(b.z||0), z3(b.y));
   R3.ball.rotation.x += b.vy*dt*2.2; R3.ball.rotation.z -= b.vx*dt*2.2;
   R3.ballShadow.position.set(b.x,0.012,z3(b.y));
+  var bs2=1/(1+(b.z||0)*0.18); R3.ballShadow.scale.set(bs2,bs2,1);
   // 操控标记
   var cp=null;
   for(i=0;i<M.players.length;i++) if(M.players[i].pid===M.ctrl) cp=M.players[i];
